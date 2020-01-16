@@ -34,6 +34,12 @@ class Board extends React.Component {
     getNames(player1, player2) {
         this.setState({ player1: player1, player2: player2, started: true })
     }
+    onReset(){
+       this.setState({
+        squares: Array(9).fill(null),
+        isNext: true,
+       }) 
+    }
     render() {
         const winner = calculateWinner(this.state.squares);
         let status;
@@ -63,6 +69,8 @@ class Board extends React.Component {
                             {this.renderSquare(7)}
                             {this.renderSquare(8)}
                         </div>
+                        <br />
+                        <input type="button" onClick={() => this.onReset()} value='Reset' />
                     </>}
 
             </div>
