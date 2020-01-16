@@ -11,6 +11,7 @@ class Board extends React.Component {
             player1: '',
             player2: '',
             started: false,
+            errors: {},
         };
         this.getNames = this.getNames.bind(this);
     }
@@ -32,13 +33,30 @@ class Board extends React.Component {
         />;
     }
     getNames(player1, player2) {
-        this.setState({ player1: player1, player2: player2, started: true })
+        let errors = []
+        !player1 && (errors['player1Error'] = 'Please enter player 1');
+        !player2 && (errors['player2Error'] = 'Please enter player 2');
+        (player1 && player2) ?
+            this.setState({
+                player1: player1,
+                player2: player2,
+                errors: '',
+                started: true
+            }) :
+            this.setState({ errors: errors })
     }
-    onReset(){
-       this.setState({
-        squares: Array(9).fill(null),
-        isNext: true,
-       }) 
+    onReset() {
+        this.setState({
+            squares: Array(9).fill(null),
+            isNext: true,
+        })
+    }
+    goBack() {
+        this.setState({
+            squares: Array(9).fill(null),
+            isNext: true,
+            started: false,
+        })
     }
     render() {
         const winner = calculateWinner(this.state.squares);
@@ -51,7 +69,7 @@ class Board extends React.Component {
         return (
             <div>
                 {!this.state.started ?
-                    <Users submitNames={this.getNames} /> :
+                    <Users submitNames={this.getNames} errors={this.state.errors} /> :
                     <>
                         <div className="status">{status}</div>
                         <div className="board-row">
@@ -71,6 +89,7 @@ class Board extends React.Component {
                         </div>
                         <br />
                         <input type="button" onClick={() => this.onReset()} value='Reset' />
+                        <input type="button" name="goback" value="Go Back" width="1000px" onClick={() => this.goBack()} />
                     </>}
 
             </div>
